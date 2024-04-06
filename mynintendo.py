@@ -5,7 +5,6 @@ import time
 import aiohttp
 import json
 import asyncio
-import sys
 from datetime import datetime
 
 # Function to fetch MyNintendo webpage
@@ -68,21 +67,16 @@ async def check_for_new_rewards(previous_rewards, current_rewards, rewards_with_
             message = ""
             for reward in new_rewards:
                 message += f"New reward available! {reward} - {rewards_with_points[reward]} Platinum Points\n"
-            message += "\nCurrently available rewards:\n"
-            for reward in current_rewards:
-                message += f"{reward} - {rewards_with_points[reward]} Platinum Points\n"
             await send_discord_notification(message, webhook_url)
+            return current_rewards  # Return current rewards without listing them
         elif not initial_run:
-            message = "Currently available rewards:\n"
-            for reward in current_rewards:
-                message += f"{reward} - {rewards_with_points[reward]} Platinum Points\n"
-            await send_discord_notification(message, webhook_url)
-        return current_rewards
+            return previous_rewards  # Return previous rewards without listing them
     else:
         log_message = f"[{datetime.now()}] No rewards currently available.\n"
         print(log_message, end='')  # Print to console
         log_to_file(log_message)
         return previous_rewards
+
 
 # Function to print available rewards
 def print_available_rewards(available_rewards, rewards_with_points):
@@ -105,17 +99,6 @@ async def main():
     
     previous_rewards = []
 
-    # Load previous rewards from the JSON file
-    try:
-        with open(previous_rewards_file, 'r') as f:
-            previous_rewards = json.load(f)
-    except FileNotFoundError:
-        log_message = f"[{datetime.now()}] No previous_rewards.json file found. Creating a new one.\n"
-        print(log_message, end='')  # Print to console
-        log_to_file(log_message)
-
-    rewards_with_points = {}
-
     # Fetch MyNintendo webpage
     html_content = fetch_my_nintendo_page()
     if html_content:
@@ -125,6 +108,7 @@ async def main():
             # Find available rewards and their corresponding platinum points
             rewards = soup.find_all(class_='sc-s17bth-0 bMmuUN sc-w55g5t-0 gSthvS sc-eg7slj-2 iiGOlC')
             points = soup.find_all(class_='sc-1f0n8u6-9 unbAu')
+            rewards_with_points = {}
             for reward, point in zip(rewards, points):
                 reward_text = reward.text.strip()
                 point_text = point.text.strip()
@@ -134,7 +118,10 @@ async def main():
             # Print available rewards (for testing)
             print_available_rewards(available_rewards, rewards_with_points)
             # Send current rewards on startup
-            await check_for_new_rewards(previous_rewards, available_rewards, rewards_with_points, WEBHOOK_URL, initial_run=True)
+            message = "Thanks for using my script! Available rewards:\n"
+            for reward in available_rewards:
+                message += f"- {reward} - {rewards_with_points[reward]} Platinum Points\n"
+            await send_discord_notification(message, WEBHOOK_URL)
             previous_rewards = available_rewards
         else:
             log_message = f"[{datetime.now()}] Failed to parse HTML content.\n"
