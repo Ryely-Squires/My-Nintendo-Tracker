@@ -9,6 +9,7 @@ Luckily, Nintendo conveniently stores all platinum point values and reward names
 This script is for Canadian MyNintendo users only. Other regions are not supported at this time, but will probably be added eventually. And as of this initial commit, the script is not currently working (needs some tweaks),
 but can indeed give you a list of available rewards on startup!
 
-I'm not responsible for any damage your system incurs (running a web scraping .py file...?) with use of this script. This is my first real project, so I have no idea how conventions work concerning code/github and whatnot.
+I'm not responsible for any damage your system incurs (running a web scraping .py file...?) with use of this script. This is my first real project, so I have no idea how conventions work concerning code in github and whatnot.
+Portions of this code are also made with AI...you can probably tell which ones. 
 
 # Guide (ADDING SOON!)
