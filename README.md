@@ -14,7 +14,7 @@ but can indeed give you a list of available rewards on startup!
 I'm not responsible for any damage your system incurs (running a web scraping .py file...?) with use of this script. This is my first real project, so I have no idea how conventions work concerning code in github and whatnot.
 Portions of this code are also made with AI...you can probably tell which ones.  
 
-Note, remember .json functionality. The file should only have [] on first run. If it does not, or you lack the file for some reason, the script will create one and populate it anyway.
+Note, remember .json functionality. The file should only have [] on first run. If it does not, add it. If the file does not exist, the script will create one and populate it anyway.
 
 # Guide (ADDING FULLY SOON!)
 1. Download the source code. A proper release will be made when the project fully functions, but for now, just do that.
