@@ -1,3 +1,5 @@
+# MyNintendo Tracker!
+![MyNintendoTracker](https://github.com/Ryely-Squires/My-Nintendo-Tracker/assets/95175586/02def791-a64f-4559-bc05-6db5c25aa13f)
 # Why'd I make this?
 
 This is a test of my python web scraping utilities! MyNintendo is a service I use frequently, so I thought I'd develop a tracker! There is one currently,
