@@ -63,10 +63,20 @@ async def check_for_new_rewards(previous_rewards, current_rewards, rewards_with_
     if current_rewards:
         # Check for new rewards
         new_rewards = [reward for reward in current_rewards if reward not in previous_rewards]
+        
+        # Check for removed rewards
+        removed_rewards = [reward for reward in previous_rewards if reward not in current_rewards]
+        
         if new_rewards and not initial_run:
             message = ""
             for reward in new_rewards:
                 message += f"New reward available! {reward} - {rewards_with_points[reward]} Platinum Points\n"
+            await send_discord_notification(message, webhook_url)
+            return current_rewards  # Return current rewards without listing them
+        elif removed_rewards and not initial_run:
+            message = ""
+            for reward in removed_rewards:
+                message += f"Reward removed: {reward}\n"
             await send_discord_notification(message, webhook_url)
             return current_rewards  # Return current rewards without listing them
         elif not initial_run:
@@ -76,6 +86,7 @@ async def check_for_new_rewards(previous_rewards, current_rewards, rewards_with_
         print(log_message, end='')  # Print to console
         log_to_file(log_message)
         return previous_rewards
+
 
 
 # Function to print available rewards
@@ -92,7 +103,7 @@ def log_to_file(message):
 # Main function to check rewards availability and send notifications
 async def main():
     # Discord Webhook URL
-    WEBHOOK_URL = 'YourWebhookHere'
+    WEBHOOK_URL = 'https://discord.com/api/webhooks/1225980341303509033/S8P51sbEiu-6XR6PX_kksX6Dl4UFIISrVEH9Dd9jX5DpNaq58-sF7xJgprJWaQwGVgpo'
     
     # JSON file to store previous rewards
     previous_rewards_file = 'previous_rewards.json'
