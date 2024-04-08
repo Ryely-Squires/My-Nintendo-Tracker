@@ -101,7 +101,7 @@ def log_to_file(message):
 # Main function to check rewards availability and send notifications
 async def main():
     # Discord Webhook URL
-    WEBHOOK_URL = 'https://discord.com/api/webhooks/1225980341303509033/S8P51sbEiu-6XR6PX_kksX6Dl4UFIISrVEH9Dd9jX5DpNaq58-sF7xJgprJWaQwGVgpo'
+    WEBHOOK_URL = 'YourWebhookHere'
     
     # JSON file to store previous rewards
     previous_rewards_file = 'previous_rewards.json'
