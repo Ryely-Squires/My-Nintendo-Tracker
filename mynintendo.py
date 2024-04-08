@@ -61,33 +61,37 @@ async def send_discord_notification(message, webhook_url):
 # Function to check for new rewards and send notifications
 async def check_for_new_rewards(previous_rewards, current_rewards, rewards_with_points, webhook_url, initial_run=False):
     if current_rewards:
-        # Check for new rewards
-        new_rewards = [reward for reward in current_rewards if reward not in previous_rewards]
+        new_rewards = []
+        removed_rewards = []
+
+        # Compare current rewards with previous rewards
+        for reward in current_rewards:
+            if reward not in previous_rewards:
+                new_rewards.append(reward)
         
-        # Check for removed rewards
-        removed_rewards = [reward for reward in previous_rewards if reward not in current_rewards]
-        
+        for reward in previous_rewards:
+            if reward not in current_rewards:
+                removed_rewards.append(reward)
+
         if new_rewards and not initial_run:
             message = ""
             for reward in new_rewards:
                 message += f"New reward available! {reward} - {rewards_with_points[reward]} Platinum Points\n"
             await send_discord_notification(message, webhook_url)
-            return current_rewards  # Return current rewards without listing them
+            return current_rewards
         elif removed_rewards and not initial_run:
             message = ""
             for reward in removed_rewards:
                 message += f"Reward removed: {reward}\n"
             await send_discord_notification(message, webhook_url)
-            return current_rewards  # Return current rewards without listing them
+            return current_rewards
         elif not initial_run:
-            return previous_rewards  # Return previous rewards without listing them
+            return previous_rewards
     else:
         log_message = f"[{datetime.now()}] No rewards currently available.\n"
-        print(log_message, end='')  # Print to console
+        print(log_message, end='')
         log_to_file(log_message)
         return previous_rewards
-
-
 
 # Function to print available rewards
 def print_available_rewards(available_rewards, rewards_with_points):
@@ -181,3 +185,4 @@ async def main():
 if __name__ == "__main__":
     # Run the main function
     asyncio.run(main())
+
