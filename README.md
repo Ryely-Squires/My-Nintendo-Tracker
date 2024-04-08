@@ -6,7 +6,7 @@ This is a test of my python web scraping utilities! MyNintendo is a service I us
 but it lacks discord webhook integration, which is something I value.
 Luckily, Nintendo conveniently stores all platinum point values and reward names in specific classes on the HTML, so scraping all of them is a snap!
 
-# Disclaimer
+# Notice
 
 This script is for Canadian MyNintendo users only. Other regions are not supported at this time, but will probably be added eventually. And as of this initial commit, the script is not currently working (needs some tweaks),
 but can indeed give you a list of available rewards on startup!
