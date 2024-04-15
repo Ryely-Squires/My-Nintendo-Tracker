@@ -9,7 +9,9 @@ from datetime import datetime
 
 # Function to fetch MyNintendo webpage
 def fetch_my_nintendo_page():
-    url = 'https://www.nintendo.com/en-ca/store/exclusives/rewards/'
+    url = 'YourRegionURLHere'
+    # For US users, "https://www.nintendo.com/us/store/exclusives/rewards/"
+    # For CA users, "https://www.nintendo.com/en-ca/store/exclusives/rewards/"
     try:
         response = requests.get(url)
         if response.status_code == 200:
