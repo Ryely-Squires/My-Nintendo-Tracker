@@ -36,6 +36,7 @@ The logic to remember what is previously available is stored in the previous_rew
 # TODO 
 
 1. Make sure the thing actually works (probably pretty high priority).
-2. Add multi region support.
+2. Add multi region support (Only supports CA and US right now).
 3. Add docker method (in compose).
 4. Clean up the code. It's a little ugly at the moment.
+5. Scrape image URLs so you can see the actual reward when a new one comes out.
