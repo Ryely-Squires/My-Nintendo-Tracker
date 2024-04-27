@@ -5,6 +5,7 @@ import time
 import aiohttp
 import json
 import asyncio
+import selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime
