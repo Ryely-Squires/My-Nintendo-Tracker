@@ -26,6 +26,8 @@ Note, remember .json functionality. The file should only have [] on first run. I
 4. Enter the mynintendo.py file's code with your favourite text editor. Look for the URL field near the top of the code, and paste the URL of your country's rewards page. For convenience, the two URLs are available in
 comments.
 
+5. Find the "PathToDriver" line. Now, copy the path to the chromedriver present in the code. For example, "C:\Users\User\Documents\My-Nintendo-Tracker-main\My-Nintendo-Tracker-main\chromedriver.exe". A chromedriver executable is present in the code. If it's out of date or you have a specific one, you can put it there, instead.
+
 6. Find the "# Discord Webhook URL" line. Now, navigate to a server you have admin permissions on discord. Right click on the channel,
 click "edit channel", navigate to "integrations" on the left side menu, and click webhooks. Create a webhook, edit it as you'd like, and copy it's URL.
 Paste the URL in the URL field within the .py file.
