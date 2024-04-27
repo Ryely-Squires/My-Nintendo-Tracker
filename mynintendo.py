@@ -5,27 +5,37 @@ import time
 import aiohttp
 import json
 import asyncio
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from datetime import datetime
 
 # Function to fetch MyNintendo webpage
 def fetch_my_nintendo_page():
-    url = 'YourRegionURLHere'
+    # Path to ChromeDriver executable
+    chromedriver_path = r'PathToDriver'
+    
+    chrome_options = Options()
+    chrome_options.add_argument("--headless=new")
+    # Initialize Chrome WebDriver with options
+    driver = webdriver.Chrome(options=chrome_options)
+
+    # Load the URL
+    url = 'YourRegionUrlHere'
     # For US users, "https://www.nintendo.com/us/store/exclusives/rewards/"
     # For CA users, "https://www.nintendo.com/en-ca/store/exclusives/rewards/"
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            return response.text
-        else:
-            log_message = f"[{datetime.now()}] Failed to fetch MyNintendo webpage. Status code: {response.status_code}\n"
-            print(log_message, end='')  # Print to console
-            log_to_file(log_message)
-            return None
-    except requests.RequestException as e:
-        log_message = f"[{datetime.now()}] Error fetching MyNintendo webpage: {e}\n"
-        print(log_message, end='')  # Print to console
-        log_to_file(log_message)
-        return None
+    driver.get(url)
+    
+    # Wait for the page to load
+    time.sleep(5)  # Adjust this delay as needed
+    
+    html_content = driver.page_source
+    
+    driver.quit()  # Close the WebDriver
+    
+    return html_content
+
+# Call the function to fetch the HTML content of the page
+html_content = fetch_my_nintendo_page()
 
 # Function to send Discord notification
 async def send_discord_notification(message, webhook_url):
