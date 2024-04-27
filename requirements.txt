@@ -2,5 +2,5 @@ requests
 beautifulsoup4
 discord.py
 aiohttp
-
+selenium
 # Just realized that gigantic list was not needed lol.
