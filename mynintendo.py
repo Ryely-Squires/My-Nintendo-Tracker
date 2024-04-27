@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.options import Options
 from datetime import datetime
 
 # Function to fetch MyNintendo webpage
-def fetch_my_nintendo_page():
+async def fetch_my_nintendo_page():
     # Path to ChromeDriver executable
     chromedriver_path = r'PathToDriver'
     
@@ -122,7 +122,7 @@ async def main():
     previous_rewards = []
 
     # Fetch MyNintendo webpage
-    html_content = fetch_my_nintendo_page()
+    html_content = await fetch_my_nintendo_page()
     if html_content:
         # Parse HTML content
         soup = BeautifulSoup(html_content, 'html.parser')
