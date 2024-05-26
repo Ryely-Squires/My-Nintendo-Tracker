@@ -8,5 +8,7 @@ services:
     environment:
       - WEBHOOK_URL=InsertHere
       - REGION_URL=InsertHere
+      # CA users: https://www.nintendo.com/en-ca/store/exclusives/rewards/
+      # US users: https://www.nintendo.com/us/store/exclusives/rewards/
     volumes:
       - /path/to/mynintendo:/app
