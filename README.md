@@ -17,7 +17,7 @@ Portions of this code are also made with AI...you can probably tell which ones.
 
 Note, remember .json functionality. The file should only have [] on first run. If it does not, add it. If the file does not exist, the script will create one and populate it anyway.
 
-# Guide (ADDING FULLY SOON!)
+# Guide for Regular Use(ADDING FULLY SOON!)
 1. Download the source code. A proper release will be made when the project fully functions, but for now, just do that.
 
 2. Extract the source code, and navigate into the project folder. Enter the terminal.
@@ -30,16 +30,34 @@ comments.
 5. Find the "PathToDriver" line. Now, copy the path to the chromedriver present in the code. For example, "C:\Users\User\Documents\My-Nintendo-Tracker-main\My-Nintendo-Tracker-main\chromedriver.exe". A chromedriver executable is present in the code. If it's out of date or you have a specific one, you can put it there, instead.
 
 6. Find the "# Discord Webhook URL" line. Now, navigate to a server you have admin permissions on discord. Right click on the channel,
-click "edit channel", navigate to "integrations" on the left side menu, and click webhooks. Create a webhook, edit it as you'd like, and copy it's URL.
+click "edit channel", navigate to "integrations" on the left side menu, and click webhooks. Create a webhook, edit it as you'd like, and copy its URL.
 Paste the URL in the URL field within the .py file.
 
 7. Run the script! You should get a list on startup detailing available rewards, and from then on, every hour, it'll send a notification if it finds a new reward, along with a then updated list of rewards.
 The logic to remember what is previously available is stored in the previous_rewards.json file, with logs available when notifications are sent.
 
+# Docker
+
+Want to use Docker? Supported!
+
+1. Download the Docker branch source code. A proper release will be made when the project fully functions, but for now, just do that.
+
+2. Extract the files and enter the project folder.
+
+3. Navigate to a server you have admin permissions on discord. Right click on the channel,
+click "edit channel", navigate to "integrations" on the left side menu, and click webhooks. Create a webhook, edit it as you'd like (might I suggest the provided profile picture?), and copy its URL.
+
+4. In the docker-compose.yml file, place your webhook and region URL.
+
+5. Build the image using the provided dockerfile. For default, the command is "docker build -t mynintendo-tracker .".
+
+6. Launch the container! Run it detached..."docker compose up -d".
+
+7. Should you need to access the logs, run "docker logs mynintendo".
+
 # TODO 
 
 1. Make sure the thing actually works (probably pretty high priority).
 2. Add multi region support (Only supports CA and US right now).
-3. Add docker method (in compose).
-4. Clean up the code. It's a little ugly at the moment.
-5. Scrape image URLs so you can see the actual reward when a new one comes out.
+3. Clean up the code. It's a little ugly at the moment.
+4. Scrape image URLs so you can see the actual reward when a new one comes out.
