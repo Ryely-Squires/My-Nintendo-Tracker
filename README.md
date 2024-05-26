@@ -1,7 +1,7 @@
 # MyNintendo Tracker!
-![MyNintendoTracker](https://github.com/Ryely-Squires/My-Nintendo-Tracker/assets/95175586/02def791-a64f-4559-bc05-6db5c25aa13f)
-# Why'd I make this?
 
+# Why'd I make this?
+![newlogololcappyeyes](https://github.com/Ryely-Squires/My-Nintendo-Tracker/assets/95175586/a81b75f5-8fe4-4723-a224-a7608577c476)
 This is a test of my python web scraping utilities! MyNintendo is a service I use frequently, so I thought I'd develop a tracker! There is one currently,
 but it lacks discord webhook integration, which is something I value.
 Luckily, Nintendo conveniently stores all platinum point values and reward names in specific classes on the HTML, so scraping all of them is a snap!
