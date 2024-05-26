@@ -6,11 +6,21 @@ import time
 import aiohttp
 import json
 import asyncio
+import logging
 import selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('logs.txt'),
+        logging.StreamHandler()  # This will log to the container
+    ]
+)
 
 # Function to fetch MyNintendo webpage
 async def fetch_my_nintendo_page():
@@ -69,10 +79,12 @@ async def send_discord_notification(message, webhook_url):
             log_message = f"[{datetime.now()}] Notification sent to Discord.\n"
             print(log_message, end='')  # Print to console
             log_to_file(log_message)
+            logging.info("Notification sent to Discord.") # Docker
         except discord.errors.HTTPException as e:
             log_message = f"[{datetime.now()}] Error sending Discord notification: {e}\n"
             print(log_message, end='')  # Print to console
             log_to_file(log_message)
+            logging.error(f"Error sending Discord notification: {e}") # Docker
 
 # Function to check for new rewards and send notifications
 async def check_for_new_rewards(previous_rewards, current_rewards, rewards_with_points, webhook_url, initial_run=False):
@@ -101,13 +113,16 @@ async def check_for_new_rewards(previous_rewards, current_rewards, rewards_with_
         log_message = f"[{datetime.now()}] No rewards currently available.\n"
         print(log_message, end='')  # Print to console
         log_to_file(log_message)
+        logging.info("No rewards currently available.") # Docker
         return previous_rewards
 
 # Function to print available rewards
 def print_available_rewards(available_rewards, rewards_with_points):
     print("Available rewards:")
+    logging.info("Available rewards:") # Docker
     for reward in available_rewards:
         print(f"- {reward} - {rewards_with_points[reward]} Platinum Points")
+        logging.info(f"- {reward} - {rewards_with_points[reward]} Platinum Points") # Docker
 
 # Function to log messages to file
 def log_to_file(message):
@@ -152,10 +167,12 @@ async def main():
             log_message = f"[{datetime.now()}] Failed to parse HTML content.\n"
             print(log_message, end='')  # Print to console
             log_to_file(log_message)
+            logging.error("Failed to parse HTML content.") # Docker
     else:
         log_message = f"[{datetime.now()}] Failed to fetch HTML content from MyNintendo webpage.\n"
         print(log_message, end='')  # Print to console
         log_to_file(log_message)
+        logging.error("Failed to fetch HTML content from MyNintendo webpage.") # Docker
 
     while True:
         # Fetch MyNintendo webpage
@@ -184,10 +201,12 @@ async def main():
                 log_message = f"[{datetime.now()}] Failed to parse HTML content.\n"
                 print(log_message, end='')  # Print to console
                 log_to_file(log_message)
+                logging.error("Failed to parse HTML content.") # Docker
         else:
             log_message = f"[{datetime.now()}] Failed to fetch HTML content from MyNintendo webpage.\n"
             print(log_message, end='')  # Print to console
             log_to_file(log_message)
+            logging.error("Failed to fetch HTML content from MyNintendo webpage.") # Docker
 
         # Wait for a certain period before checking again (e.g., every hour)
         await asyncio.sleep(3600)
