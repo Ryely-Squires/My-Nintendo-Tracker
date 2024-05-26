@@ -1,4 +1,5 @@
 import requests
+import os
 from bs4 import BeautifulSoup
 import discord
 import time
@@ -10,29 +11,31 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime
 
+
 # Function to fetch MyNintendo webpage
 async def fetch_my_nintendo_page():
     # Path to ChromeDriver executable
-    chromedriver_path = r'PathToDriver'
-    
+    chromedriver_path = '/usr/bin/chromedriver'
+
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument("--disable-setuid-sandbox")
     # Initialize Chrome WebDriver with options
     driver = webdriver.Chrome(options=chrome_options)
-
     # Load the URL
-    url = 'YourRegionUrlHere'
+    url = os.getenv('REGION_URL')
     # For US users, "https://www.nintendo.com/us/store/exclusives/rewards/"
     # For CA users, "https://www.nintendo.com/en-ca/store/exclusives/rewards/"
     driver.get(url)
-    
+
     # Wait for the page to load
     time.sleep(5)  # Adjust this delay as needed
-    
+
     html_content = driver.page_source
-    
+
     driver.quit()  # Close the WebDriver
-    
+
     return html_content
 
 # Call the function to fetch the HTML content of the page
@@ -76,10 +79,10 @@ async def check_for_new_rewards(previous_rewards, current_rewards, rewards_with_
     if current_rewards:
         # Check for new rewards
         new_rewards = [reward for reward in current_rewards if reward not in previous_rewards]
-        
+
         # Check for removed rewards
         removed_rewards = [reward for reward in previous_rewards if reward not in current_rewards]
-        
+
         if new_rewards and not initial_run:
             message = ""
             for reward in new_rewards:
@@ -114,11 +117,11 @@ def log_to_file(message):
 # Main function to check rewards availability and send notifications
 async def main():
     # Discord Webhook URL
-    WEBHOOK_URL = 'YourWebhookHere'
-    
+    WEBHOOK_URL = os.getenv('WEBHOOK_URL')
+
     # JSON file to store previous rewards
     previous_rewards_file = 'previous_rewards.json'
-    
+
     previous_rewards = []
 
     # Fetch MyNintendo webpage
@@ -156,7 +159,7 @@ async def main():
 
     while True:
         # Fetch MyNintendo webpage
-        html_content = fetch_my_nintendo_page()
+        html_content = await fetch_my_nintendo_page()
         if html_content:
             # Parse HTML content
             soup = BeautifulSoup(html_content, 'html.parser')
@@ -173,7 +176,7 @@ async def main():
                 available_rewards = list(rewards_with_points.keys())
                 # Check for new rewards and send notifications
                 previous_rewards = await check_for_new_rewards(previous_rewards, available_rewards, rewards_with_points, WEBHOOK_URL)
-                
+
                 # Write current rewards to the JSON file
                 with open(previous_rewards_file, 'w') as f:
                     json.dump(previous_rewards, f)
@@ -192,4 +195,3 @@ async def main():
 if __name__ == "__main__":
     # Run the main function
     asyncio.run(main())
-
