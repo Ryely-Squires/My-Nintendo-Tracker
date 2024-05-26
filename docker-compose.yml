@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  my-nintendo-tracker:
+    image: mynintendo-tracker:latest
+    container_name: mynintendo
+    build: .
+    environment:
+      - WEBHOOK_URL=InsertHere
+      - REGION_URL=InsertHere
+    volumes:
+      - /path/to/mynintendo:/app
