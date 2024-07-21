@@ -9,8 +9,7 @@ Luckily, Nintendo conveniently stores all platinum point values and reward names
 
 # Notice
 
-This script is for Canadian and American MyNintendo users only. Other regions are not supported at this time, but will probably be added eventually. And as of this initial commit, the script is not currently working (needs some tweaks),
-but can indeed give you a list of available rewards on startup!
+This script is for Canadian and American MyNintendo users only. Other regions are not supported at this time, but will probably be added eventually. I'm going to say the script runs pretty perfectly now! No issues, and I've done lots of testing (even mirrored the webpage and added test rewards).
 
 I'm not responsible for any damage your system incurs (running a web scraping .py file...?) with use of this script. This is my first real project, so I have no idea how conventions work concerning code in github and whatnot.
 Portions of this code are also made with AI...you can probably tell which ones.  
@@ -56,9 +55,7 @@ click "edit channel", navigate to "integrations" on the left side menu, and clic
 7. Should you need to access the logs, run "docker logs mynintendo".
 
 # TODO 
-
-1. Make sure the thing actually works (probably pretty high priority).
-2. Add multi region support (Only supports CA and US right now).
-3. Clean up the code. It's a little ugly at the moment.
-4. Scrape image URLs so you can see the actual reward when a new one comes out.
+1. Add multi region support (Only supports CA and US right now).
+2. Clean up the code. It's a little ugly at the moment.
+3. Scrape image URLs so you can see the actual reward when a new one comes out.
 
