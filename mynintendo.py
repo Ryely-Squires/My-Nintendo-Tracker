@@ -128,7 +128,7 @@ async def main():
         soup = BeautifulSoup(html_content, 'html.parser')
         if soup:
             # Find available rewards and their corresponding platinum points
-            rewards = soup.find_all(class_='sc-s17bth-0 bMmuUN sc-w55g5t-0 gSthvS sc-eg7slj-2 iiGOlC')
+            rewards = soup.find_all(class_='sc-eg7slj-1 ieWZCg')
             points = soup.find_all(class_='sc-1f0n8u6-9 unbAu')
             rewards_with_points = {}
             for reward, point in zip(rewards, points):
