@@ -1,15 +1,15 @@
-import requests
 import os
-from bs4 import BeautifulSoup
-import discord
-import time
-import aiohttp
 import json
 import asyncio
 import logging
-import selenium
+import aiohttp
+import discord
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
 
 # Configure logging
@@ -31,25 +31,23 @@ async def fetch_my_nintendo_page():
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument("--disable-setuid-sandbox")
+
     # Initialize Chrome WebDriver with options
     driver = webdriver.Chrome(options=chrome_options)
+
     # Load the URL
     url = os.getenv('REGION_URL')
-    # For US users, "https://www.nintendo.com/us/store/exclusives/rewards/"
-    # For CA users, "https://www.nintendo.com/en-ca/store/exclusives/rewards/"
     driver.get(url)
 
     # Wait for the page to load
-    time.sleep(5)  # Adjust this delay as needed
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "div.y83ib"))
+    )
 
     html_content = driver.page_source
-
     driver.quit()  # Close the WebDriver
 
     return html_content
-
-# Call the function to fetch the HTML content of the page
-html_content = fetch_my_nintendo_page()
 
 # Function to send Discord notification
 async def send_discord_notification(message, webhook_url):
@@ -145,9 +143,9 @@ async def main():
         # Parse HTML content
         soup = BeautifulSoup(html_content, 'html.parser')
         if soup:
-            # Find available rewards and their corresponding platinum points
-            rewards = soup.find_all(class_='sc-eg7slj-1 ieWZCg')
-            points = soup.find_all(class_='sc-1f0n8u6-9 unbAu')
+            # Find available rewards and their corresponding platinum points using hierarchy-based selectors
+            rewards = soup.select("div.y83ib a div div div h2")
+            points = soup.select("div.y83ib a div div div div[data-testid='platinumPoints'] span.pXrQP")
             rewards_with_points = {}
             for reward, point in zip(rewards, points):
                 reward_text = reward.text.strip()
@@ -181,9 +179,9 @@ async def main():
             # Parse HTML content
             soup = BeautifulSoup(html_content, 'html.parser')
             if soup:
-                # Find available rewards and their corresponding platinum points
-                rewards = soup.find_all(class_='sc-s17bth-0 bMmuUN sc-w55g5t-0 gSthvS sc-eg7slj-2 iiGOlC')
-                points = soup.find_all(class_='sc-1f0n8u6-9 unbAu')
+                # Find available rewards and their corresponding platinum points using hierarchy-based selectors
+                rewards = soup.select("div.y83ib a div div div h2")
+                points = soup.select("div.y83ib a div div div div[data-testid='platinumPoints'] span.pXrQP")
                 rewards_with_points = {}
                 for reward, point in zip(rewards, points):
                     reward_text = reward.text.strip()
