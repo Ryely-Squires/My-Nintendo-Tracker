@@ -1,22 +1,37 @@
-import requests
-from bs4 import BeautifulSoup
-import discord
-import time
-import aiohttp
+import os
 import json
 import asyncio
-import selenium
+import logging
+import aiohttp
+import discord
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('logs.txt'),
+        logging.StreamHandler()  # This will log to the container
+    ]
+)
 
 # Function to fetch MyNintendo webpage
 async def fetch_my_nintendo_page():
     # Path to ChromeDriver executable
-    chromedriver_path = r'PathToDriver'
-    
+     chromedriver_path = r'PathToDriver'
+
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument("--disable-setuid-sandbox")
+
     # Initialize Chrome WebDriver with options
     driver = webdriver.Chrome(options=chrome_options)
 
@@ -25,18 +40,16 @@ async def fetch_my_nintendo_page():
     # For US users, "https://www.nintendo.com/us/store/exclusives/rewards/"
     # For CA users, "https://www.nintendo.com/en-ca/store/exclusives/rewards/"
     driver.get(url)
-    
-    # Wait for the page to load
-    time.sleep(5)  # Adjust this delay as needed
-    
-    html_content = driver.page_source
-    
-    driver.quit()  # Close the WebDriver
-    
-    return html_content
 
-# Call the function to fetch the HTML content of the page
-html_content = fetch_my_nintendo_page()
+    # Wait for the page to load
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "div.y83ib"))
+    )
+
+    html_content = driver.page_source
+    driver.quit()  # Close the WebDriver
+
+    return html_content
 
 # Function to send Discord notification
 async def send_discord_notification(message, webhook_url):
@@ -76,10 +89,10 @@ async def check_for_new_rewards(previous_rewards, current_rewards, rewards_with_
     if current_rewards:
         # Check for new rewards
         new_rewards = [reward for reward in current_rewards if reward not in previous_rewards]
-        
+
         # Check for removed rewards
         removed_rewards = [reward for reward in previous_rewards if reward not in current_rewards]
-        
+
         if new_rewards and not initial_run:
             message = ""
             for reward in new_rewards:
@@ -115,10 +128,10 @@ def log_to_file(message):
 async def main():
     # Discord Webhook URL
     WEBHOOK_URL = 'YourWebhookHere'
-    
+
     # JSON file to store previous rewards
     previous_rewards_file = 'previous_rewards.json'
-    
+
     previous_rewards = []
 
     # Fetch MyNintendo webpage
@@ -127,9 +140,9 @@ async def main():
         # Parse HTML content
         soup = BeautifulSoup(html_content, 'html.parser')
         if soup:
-            # Find available rewards and their corresponding platinum points
-            rewards = soup.find_all(class_='sc-eg7slj-1 ieWZCg')
-            points = soup.find_all(class_='sc-1f0n8u6-9 unbAu')
+            # Find available rewards and their corresponding platinum points using hierarchy-based selectors
+            rewards = soup.select("div.y83ib a div div div h2")
+            points = soup.select("div.y83ib a div div div div[data-testid='platinumPoints'] span.pXrQP")
             rewards_with_points = {}
             for reward, point in zip(rewards, points):
                 reward_text = reward.text.strip()
@@ -156,14 +169,14 @@ async def main():
 
     while True:
         # Fetch MyNintendo webpage
-        html_content = fetch_my_nintendo_page()
+        html_content = await fetch_my_nintendo_page()
         if html_content:
             # Parse HTML content
             soup = BeautifulSoup(html_content, 'html.parser')
             if soup:
-                # Find available rewards and their corresponding platinum points
-                rewards = soup.find_all(class_='sc-s17bth-0 bMmuUN sc-w55g5t-0 gSthvS sc-eg7slj-2 iiGOlC')
-                points = soup.find_all(class_='sc-1f0n8u6-9 unbAu')
+                # Find available rewards and their corresponding platinum points using hierarchy-based selectors
+                rewards = soup.select("div.y83ib a div div div h2")
+                points = soup.select("div.y83ib a div div div div[data-testid='platinumPoints'] span.pXrQP")
                 rewards_with_points = {}
                 for reward, point in zip(rewards, points):
                     reward_text = reward.text.strip()
@@ -173,7 +186,7 @@ async def main():
                 available_rewards = list(rewards_with_points.keys())
                 # Check for new rewards and send notifications
                 previous_rewards = await check_for_new_rewards(previous_rewards, available_rewards, rewards_with_points, WEBHOOK_URL)
-                
+
                 # Write current rewards to the JSON file
                 with open(previous_rewards_file, 'w') as f:
                     json.dump(previous_rewards, f)
@@ -192,4 +205,3 @@ async def main():
 if __name__ == "__main__":
     # Run the main function
     asyncio.run(main())
-
