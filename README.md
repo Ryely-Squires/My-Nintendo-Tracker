@@ -8,7 +8,7 @@ but it lacks discord webhook integration, which is something I value.
 Luckily, Nintendo conveniently stores all platinum point values and reward names in specific classes on the HTML, so scraping all of them is a snap!
 
 # Notice
-(NOT WORKING! CLASS NAMES KEEP CHANGING. CURRENTLY LOOKING INTO THIS.)
+(Fixed probably)
 
 This script is for Canadian and American MyNintendo users only. Other regions are not supported at this time, but will probably be added eventually. I'm going to say the script runs pretty perfectly now! No issues, and I've done lots of testing (even mirrored the webpage and added test rewards).
 
