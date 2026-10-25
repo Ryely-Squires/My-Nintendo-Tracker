@@ -1,4 +1,4 @@
-# MyNintendo Tracker!
+# MyNintendo Tracker! (DEPRECATED)
 ![usethisfinalmynintendomaybe](https://github.com/Ryely-Squires/My-Nintendo-Tracker/assets/95175586/b1e895ec-752e-444b-a9aa-681e27439757)
 (font from https://www.textstudio.com)
 # Why'd I make this?
